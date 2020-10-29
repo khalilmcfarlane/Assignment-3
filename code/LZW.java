@@ -35,6 +35,8 @@ public class LZW {
 
 
     public static void expand() {
+        // NOTE: In this case, 
+        // st is codebook
         String[] st = new String[L];
         int i; // next available codeword value
 

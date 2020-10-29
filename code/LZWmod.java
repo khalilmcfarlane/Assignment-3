@@ -11,8 +11,9 @@
 
 public class LZWmod {
     private static final int R = 256;        // number of input chars
-    private static final int L = 4096;       // number of codewords = 2^W
-    private static final int W = 12;         // codeword width
+    private static int L = 4096;       // number of codewords = 2^W
+    private static int W = 12;         // codeword width
+    private static final char flag = '^'; //
 
     public static void compress() {
      
@@ -75,10 +76,22 @@ public class LZWmod {
         BinaryStdOut.close();
     }
 
-
+    // Resets Dictionary
+    // Only to be used for compression
+    //public static void reset() 
+        // set flag val '^' in first line of file (only 1 bit)
+            // aka BinaryStdOut.write(flag, 1);
+        // 
 
     public static void main(String[] args) {
         if      (args[0].equals("-")) compress();
+            // if args[1].equalsIgnoreCase("r")
+            // call reset method
+            // if args[1].equalsIgnoreCase("n")
+            // carry on as normal
+            // ONLY FOR COMPRESSION
+        // if flag "^" is present in output file, reset if running out of codewords
+        
         else if (args[0].equals("+")) expand();
         else throw new RuntimeException("Illegal command line argument");
     }

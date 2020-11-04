@@ -40,9 +40,9 @@ public class LZWmod {
               BinaryStdOut.write(codeword, W);
               if (code < L)    // Add to symbol table if not full
                   st.put(current, code++);
-            if(W < 16)
+            if(code == L)
             {
-              if(code >= L)
+              if( W < 16)
               {
                   W++;
                   L = 2*L;
@@ -77,9 +77,18 @@ public class LZWmod {
             BinaryStdOut.write(val);
             codeword = BinaryStdIn.readInt(W);
             if (codeword == R) break;
-            String s = st[codeword];
+            String s = st[codeword];    // index out of bounds
             if (i == codeword) s = val + val.charAt(0);   // special case hack
-            if (i < L) st[i++] = val + s.charAt(0);
+            if(i+1 == L)                                    // variable codeword size implementation
+            {
+                if(W < 16)
+                {
+                    W++;
+                    L = 2*L;
+                }
+            }
+            if (i+1 < L) st[i++] = val + s.charAt(0);     // Update to i++ in order to be on 
+                                                          // same pace as compress
             val = s;
 
         }

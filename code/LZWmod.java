@@ -79,6 +79,10 @@ public class LZWmod {
             if (codeword == R) break;
             String s = st[codeword];    // index out of bounds
             if (i == codeword) s = val + val.charAt(0);   // special case hack
+            if(i == L+1)
+            {
+                st[i++] = val + s.charAt(0);
+            }
             if(i+1 == L)                                    // variable codeword size implementation
             {
                 if(W < 16)

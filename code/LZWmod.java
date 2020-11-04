@@ -46,6 +46,9 @@ public class LZWmod {
               {
                   W++;
                   L = 2*L;
+                  System.out.println(L);
+                  System.out.println();
+                  System.out.println();
               }
             }
               current = new StringBuilder();
@@ -108,6 +111,7 @@ public class LZWmod {
 
     public static void main(String[] args) {
         if      (args[0].equals("-")) compress();
+        
             // if args[1].equalsIgnoreCase("r")
             // call reset method
             // if args[1].equalsIgnoreCase("n")

@@ -11,8 +11,10 @@
 
 public class LZWmod {
     private static final int R = 256;        // number of input chars
-    private static int L = 4096;       // number of codewords = 2^W
-    private static int W = 12;         // codeword width
+    //private static int L = 4096;       // number of codewords = 2^W
+    //private static int W = 12;         // codeword width
+    private static int L = 512;       // number of codewords = 2^W
+    private static int W = 9;         // codeword width
     private static final char flag = '^'; //
 
     public static void compress() {
@@ -38,6 +40,14 @@ public class LZWmod {
               BinaryStdOut.write(codeword, W);
               if (code < L)    // Add to symbol table if not full
                   st.put(current, code++);
+            if(W < 16)
+            {
+              if(code >= L)
+              {
+                  W++;
+                  L = 2*L;
+              }
+            }
               current = new StringBuilder();
               current.append(c);
             }

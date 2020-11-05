@@ -10,7 +10,7 @@
  *************************************************************************/
 
 public class LZWmod {
-    private static final int R = 256;        // number of input chars
+    private static int R = 256;        // number of input chars
     //private static int L = 4096;       // number of codewords = 2^W
     //private static int W = 12;         // codeword width
     private static int L = 512;       // number of codewords = 2^W
@@ -40,18 +40,17 @@ public class LZWmod {
               BinaryStdOut.write(codeword, W);
               if (code < L)    // Add to symbol table if not full
                   st.put(current, code++);
-            if(code == L)
-            {
-              if( W < 16)
-              {
-                  W++;
-                  L = 2*L;
-                  System.out.println(L);
-                  System.out.println();
-                  System.out.println();
-              }
-            }
-              current = new StringBuilder();
+            else {    
+                    if( W < 16)
+                    {
+                        W++;
+                        L *= 2;
+                        st.put(current, code++); //new add
+                        //System.out.println(); //Look at this if statement
+                    }
+                }
+                current = current.delete(0, current.length());
+              //current = new StringBuilder();
               current.append(c);
             }
         }
@@ -75,32 +74,57 @@ public class LZWmod {
 
         int codeword = BinaryStdIn.readInt(W);
         String val = st[codeword];
-
+        
         while (true) {
+            if(i >= L && W < 16)                                    // variable codeword size implementation
+            {
+                /*
+                if(i == L-1) {
+                    st[i++] = val + s.charAt(0);
+                }
+                */
+                W++;
+                L *= 2;
+                //L = 2*L;
+                st = resizeArr(st);
+               // st[i++] = val + s.charAt(0);
+            }
             BinaryStdOut.write(val);
             codeword = BinaryStdIn.readInt(W);
             if (codeword == R) break;
             String s = st[codeword];    // index out of bounds
             if (i == codeword) s = val + val.charAt(0);   // special case hack
-            if(i == L+1)
+            /*
+            if(i >= L && W < 16)                                    // variable codeword size implementation
             {
-                st[i++] = val + s.charAt(0);
-            }
-            if(i+1 == L)                                    // variable codeword size implementation
-            {
-                if(W < 16)
-                {
-                    W++;
-                    L = 2*L;
+                /*
+                if(i == L-1) {
+                    st[i++] = val + s.charAt(0);
                 }
+                
+                W++;
+                L *= 2;
+                //L = 2*L;
+                //st = resizeArr(st);
+               // st[i++] = val + s.charAt(0);
             }
-            if (i+1 < L) st[i++] = val + s.charAt(0);     // Update to i++ in order to be on 
-                                                          // same pace as compress
+           */
+            if (i < L) 
+                st[i++] = val + s.charAt(0);     
             val = s;
 
         }
         BinaryStdOut.close();
     }
+    private static String[] resizeArr(String[] arr) {
+
+		String[] newStr = new String[arr.length * 2];	
+
+		for (int i = 0; i < arr.length; i++) 
+			newStr[i] = arr[i];
+
+		return newStr;
+	}
 
     // Resets Dictionary
     // Only to be used for compression

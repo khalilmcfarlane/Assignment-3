@@ -49,11 +49,16 @@ public class LZWmod {
               if (code < L)    // Add to symbol table if not full
                   st.put(current, code++);
             else {
-                    if(RESET_FLAG == true && W < 16)
+                    if(RESET_FLAG == true && W == 16)
                     {
+                        //Need to reinitialize everything
+                        st = new TSTmod<Integer>();
+                        for (int i = 0; i < R; i++)
+                            st.put(new StringBuilder("" + (char) i), i);
+                        code = R+1;  // R is codeword for EOF
                         W = 9;
                         L = 512;
-                        //maybe do st.put(current, code++); ?
+                        st.put(current, code++);
                     }    
                     if( W < 16)
                     {
@@ -85,6 +90,7 @@ public class LZWmod {
             st[i] = "" + (char) i;
         st[i++] = "";                        // (unused) lookahead for EOF
 
+        String reset_character = BinaryStdIn.readString();
         int codeword = BinaryStdIn.readInt(W);
         String val = st[codeword];
         
@@ -94,6 +100,19 @@ public class LZWmod {
                 W++;
                 L *= 2;
                 st = resizeArr(st);
+            }
+            else if(i >= L && W == 16 && reset_character.equals(flag)) {
+                //reset codebook
+                st = new String[L];
+
+                // initialize symbol table with all 1-character strings
+                for (i = 0; i < R; i++)
+                    st[i] = "" + (char) i;
+                st[i++] = "";                        // (unused) lookahead for EOF
+                W = 9;
+                L = 512;
+                i = R+1;
+
             }
             BinaryStdOut.write(val);
             codeword = BinaryStdIn.readInt(W);

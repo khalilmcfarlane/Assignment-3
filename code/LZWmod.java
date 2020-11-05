@@ -45,8 +45,7 @@ public class LZWmod {
                     {
                         W++;
                         L *= 2;
-                        st.put(current, code++); //new add
-                        //System.out.println(); //Look at this if statement
+                        st.put(current, code++); 
                     }
                 }
                 current = current.delete(0, current.length());
@@ -78,16 +77,9 @@ public class LZWmod {
         while (true) {
             if(i >= L && W < 16)                                    // variable codeword size implementation
             {
-                /*
-                if(i == L-1) {
-                    st[i++] = val + s.charAt(0);
-                }
-                */
                 W++;
                 L *= 2;
-                //L = 2*L;
                 st = resizeArr(st);
-               // st[i++] = val + s.charAt(0);
             }
             BinaryStdOut.write(val);
             codeword = BinaryStdIn.readInt(W);

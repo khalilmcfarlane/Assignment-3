@@ -15,7 +15,8 @@ public class LZWmod {
     //private static int W = 12;         // codeword width
     private static int L = 512;       // number of codewords = 2^W
     private static int W = 9;         // codeword width
-    private static final char flag = '^'; //
+    private static boolean RESET_FLAG = false;
+    private static final String flag = "^";    //flag for reset
 
     public static void compress() {
      
@@ -24,6 +25,13 @@ public class LZWmod {
             st.put(new StringBuilder("" + (char) i), i);
         int code = R+1;  // R is codeword for EOF
 
+        //writing in a flag at beginning of output file
+        //Before decompression, program will read flag and decide to reset
+        if(RESET_FLAG == true) {
+            BinaryStdOut.write(flag, 1);
+        }
+        else
+            BinaryStdOut.write(0, 1);
         //initialize the current string
         StringBuilder current = new StringBuilder();
         //read and append the first char
@@ -40,7 +48,13 @@ public class LZWmod {
               BinaryStdOut.write(codeword, W);
               if (code < L)    // Add to symbol table if not full
                   st.put(current, code++);
-            else {    
+            else {
+                    if(RESET_FLAG == true && W < 16)
+                    {
+                        W = 9;
+                        L = 512;
+                        //maybe do st.put(current, code++); ?
+                    }    
                     if( W < 16)
                     {
                         W++;
@@ -126,7 +140,12 @@ public class LZWmod {
         // 
 
     public static void main(String[] args) {
-        if      (args[0].equals("-")) compress();
+        if(args[1].equalsIgnoreCase("r"))
+            RESET_FLAG = true;
+        if(args[1].equalsIgnoreCase("n"))
+            RESET_FLAG = false;
+        else RESET_FLAG = false;
+        if (args[0].equals("-")) compress();
         
             // if args[1].equalsIgnoreCase("r")
             // call reset method

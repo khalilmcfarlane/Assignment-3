@@ -117,8 +117,7 @@ public class LZWmod {
 
             }
             
-            if(i >= L && W < 16 && reset_character == false)                                 // variable codeword size implementation
-            {
+            if(i >= L && W < 16 && reset_character == false) {                               
                 W++;
                 L *= 2;
                 st = resizeArr(st);

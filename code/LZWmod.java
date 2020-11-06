@@ -1,3 +1,5 @@
+import java.util.*;
+import java.io.*;
 /*************************************************************************
  *  Compilation:  javac LZWmod.java
  *  Execution:    java LZWmod - < input.txt   (compress)
@@ -16,7 +18,8 @@ public class LZWmod {
     private static int L = 512;       // number of codewords = 2^W
     private static int W = 9;         // codeword width
     private static boolean RESET_FLAG = false;
-    private static final String flag = "^";    //flag for reset
+    private static final char flag = 'r';    //flag for reset
+    private static String option;     //option for compression
 
     public static void compress() {
      
@@ -28,10 +31,10 @@ public class LZWmod {
         //writing in a flag at beginning of output file
         //Before decompression, program will read flag and decide to reset
         if(RESET_FLAG == true) {
-            BinaryStdOut.write(flag, 1);
+            BinaryStdOut.write(RESET_FLAG);
         }
-        else
-            BinaryStdOut.write(0, 1);
+        //else
+            //BinaryStdOut.write(0, 1);
         //initialize the current string
         StringBuilder current = new StringBuilder();
         //read and append the first char
@@ -81,8 +84,9 @@ public class LZWmod {
 
 
     public static void expand() {
+        boolean reset_character = BinaryStdIn.readBoolean();
         // this is the codebook
-        String[] st = new String[L];
+        String[] st = new String[L]; 
         int i; // next available codeword value
 
         // initialize symbol table with all 1-character strings
@@ -90,18 +94,16 @@ public class LZWmod {
             st[i] = "" + (char) i;
         st[i++] = "";                        // (unused) lookahead for EOF
 
-        String reset_character = BinaryStdIn.readString();
+      // boolean reset_character = BinaryStdIn.readBoolean();
+        // I want to see what reset_character prints
+        //System.out.println(reset_character);
+        //System.out.println();
         int codeword = BinaryStdIn.readInt(W);
         String val = st[codeword];
         
         while (true) {
-            if(i >= L && W < 16)                                    // variable codeword size implementation
-            {
-                W++;
-                L *= 2;
-                st = resizeArr(st);
-            }
-            else if(i >= L && W == 16 && reset_character.equals(flag)) {
+            
+            if(i >= L && W == 16 && reset_character == true) {
                 //reset codebook
                 st = new String[L];
 
@@ -114,6 +116,14 @@ public class LZWmod {
                 i = R+1;
 
             }
+            
+            if(i >= L && W < 16 && reset_character == false)                                 // variable codeword size implementation
+            {
+                W++;
+                L *= 2;
+                st = resizeArr(st);
+            }
+            
             BinaryStdOut.write(val);
             codeword = BinaryStdIn.readInt(W);
             if (codeword == R) break;
@@ -159,12 +169,33 @@ public class LZWmod {
         // 
 
     public static void main(String[] args) {
-        if(args[1].equalsIgnoreCase("r"))
-            RESET_FLAG = true;
-        if(args[1].equalsIgnoreCase("n"))
-            RESET_FLAG = false;
-        else RESET_FLAG = false;
+        try
+        {
+            if(args[1].equalsIgnoreCase("r")) {
+                option = args[1];
+               RESET_FLAG = true;
+            }
+            if(args[1].equalsIgnoreCase("n")) {
+                option = args[1];
+                RESET_FLAG = false;
+            }
+        }
+        catch (ArrayIndexOutOfBoundsException a) {};
         if (args[0].equals("-")) compress();
+        //{
+            /*
+            if(args[1].equalsIgnoreCase("r")) {
+                RESET_FLAG = true;
+            }
+            if(args[1].equalsIgnoreCase("n")) {
+                RESET_FLAG = false;
+            }
+            else {
+                    RESET_FLAG = false;
+                 }
+                 */
+            //compress();
+        //}
         
             // if args[1].equalsIgnoreCase("r")
             // call reset method

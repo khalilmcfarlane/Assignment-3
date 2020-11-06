@@ -18,7 +18,7 @@ public class LZWmod {
     private static int L = 512;       // number of codewords = 2^W
     private static int W = 9;         // codeword width
     private static boolean RESET_FLAG = false;
-    private static final char flag = 'r';    //flag for reset
+    //private static final char flag = 'r';    //flag for reset
     private static String option;     //option for compression
 
     public static void compress() {
@@ -33,8 +33,8 @@ public class LZWmod {
         if(RESET_FLAG == true) {
             BinaryStdOut.write(RESET_FLAG);
         }
-        //else
-            //BinaryStdOut.write(0, 1);
+        else
+            BinaryStdOut.write(0, 1);
         //initialize the current string
         StringBuilder current = new StringBuilder();
         //read and append the first char

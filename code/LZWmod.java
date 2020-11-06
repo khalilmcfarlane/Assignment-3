@@ -18,8 +18,7 @@ public class LZWmod {
     private static int L = 512;       // number of codewords = 2^W
     private static int W = 9;         // codeword width
     private static boolean RESET_FLAG = false;
-    //private static final char flag = 'r';    //flag for reset
-    private static String option;     //option for compression
+    private static String option;     //Which mode for compression option
 
     public static void compress() {
      
@@ -94,10 +93,6 @@ public class LZWmod {
             st[i] = "" + (char) i;
         st[i++] = "";                        // (unused) lookahead for EOF
 
-      // boolean reset_character = BinaryStdIn.readBoolean();
-        // I want to see what reset_character prints
-        //System.out.println(reset_character);
-        //System.out.println();
         int codeword = BinaryStdIn.readInt(W);
         String val = st[codeword];
         
@@ -128,21 +123,7 @@ public class LZWmod {
             if (codeword == R) break;
             String s = st[codeword];    // index out of bounds
             if (i == codeword) s = val + val.charAt(0);   // special case hack
-            /*
-            if(i >= L && W < 16)                                    // variable codeword size implementation
-            {
-                /*
-                if(i == L-1) {
-                    st[i++] = val + s.charAt(0);
-                }
-                
-                W++;
-                L *= 2;
-                //L = 2*L;
-                //st = resizeArr(st);
-               // st[i++] = val + s.charAt(0);
-            }
-           */
+    
             if (i < L) 
                 st[i++] = val + s.charAt(0);     
             val = s;
@@ -160,13 +141,6 @@ public class LZWmod {
 		return newStr;
 	}
 
-    // Resets Dictionary
-    // Only to be used for compression
-    //public static void reset() 
-        // set flag val '^' in first line of file (only 1 bit)
-            // aka BinaryStdOut.write(flag, 1);
-        // 
-
     public static void main(String[] args) {
         try
         {
@@ -181,27 +155,6 @@ public class LZWmod {
         }
         catch (ArrayIndexOutOfBoundsException a) {};
         if (args[0].equals("-")) compress();
-        //{
-            /*
-            if(args[1].equalsIgnoreCase("r")) {
-                RESET_FLAG = true;
-            }
-            if(args[1].equalsIgnoreCase("n")) {
-                RESET_FLAG = false;
-            }
-            else {
-                    RESET_FLAG = false;
-                 }
-                 */
-            //compress();
-        //}
-        
-            // if args[1].equalsIgnoreCase("r")
-            // call reset method
-            // if args[1].equalsIgnoreCase("n")
-            // carry on as normal
-            // ONLY FOR COMPRESSION
-        // if flag "^" is present in output file, reset if running out of codewords
         
         else if (args[0].equals("+")) expand();
         else throw new RuntimeException("Illegal command line argument");
